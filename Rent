@@ -1,0 +1,61 @@
+var ask = Number(prompt('1-Villa 2-House 3-Apartment | House is default'))
+var search = null
+switch(ask){
+	case 1:
+		search = 'villa'
+	break;
+
+	case 2:
+		search = 'house'
+	break;
+
+	case 3:
+		search = 'apartment'
+	break;
+
+	default:
+		search = 'house'
+	break;
+}
+
+//console.log('Searching for '+search)
+//console.log('Start')
+var r = null
+var last = null
+var city_spots = omerta.modules.City.spots()
+for(var spot of city_spots){
+	var accomodation = spot.getAccomodations()
+	for(var acco of accomodation){
+
+		if(search == 'villa'){
+			if(acco.name.toLowerCase() == search && acco.can_rent_villa && acco.owner_name == 'Local Mob'){ 
+				r = acco
+			}
+			last = acco
+		}else{
+			if(acco.name.toLowerCase() == search && acco.can_rent && acco.owner_name == 'Local Mob'){ 
+				r = acco
+			}
+		}
+		////console.log(i, accomodation[j].name, accomodation[j].can_rent, accomodation[j].owner_name )
+		////console.log(accomodation[j])
+    }
+}
+if(r){
+	//console.log(r)
+	var url = $(r.getActionLink() ).attr('href')
+	//console.log('Redirect to '+ $(r.getActionLink()).text().toLowerCase().trim() + ' the ' +search)
+	window.omerta.GUI.container.loadPage(url)
+}else{
+	if(last){
+		if(!last.can_rent_villa){
+			alert('You already have one '+search)
+		}else{
+			alert('Nothing here -  '+search)
+		}
+	}else{
+		alert('Nothing here -  '+search)
+	}
+	
+}
+//console.log('End')
